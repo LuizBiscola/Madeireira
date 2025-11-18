@@ -10,7 +10,6 @@ public class Usuario {
     private String telefone;
     private String senha;
     private String tipoPerfil; //"Cliente etc..."
-    private String cpfCnpj;
     private Date dataCadastro;
     private boolean ativo;
 
@@ -20,7 +19,7 @@ public class Usuario {
         this.ativo = true;
     }
 //construtor com todos os atributos
-    public Usuario(int id, String nome, String email, String endereco, String telefone, String senha, String tipoPerfil, String cpfCnpj) {
+    public Usuario(int id, String nome, String email, String endereco, String telefone, String senha, String tipoPerfil) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -28,7 +27,6 @@ public class Usuario {
         this.telefone = telefone;
         this.senha = senha;
         this.tipoPerfil = tipoPerfil;
-        this.cpfCnpj = cpfCnpj;
         this.dataCadastro = new Date();
         this.ativo = true;
     }
@@ -98,14 +96,6 @@ public class Usuario {
         this.tipoPerfil = tipoPerfil;
     }
 
-    public String getCpfCnpj() {
-        return cpfCnpj;
-    }
-
-    public void setCpfCnpj(String cpfCnpj) {
-        this.cpfCnpj = cpfCnpj;
-    }
-
     public Date getDataCadastro() {
         return dataCadastro;
     }
@@ -131,7 +121,6 @@ public class Usuario {
                 ", endereco='" + endereco + '\'' +
                 ", telefone='" + telefone + '\'' +
                 ", tipoPerfil='" + tipoPerfil + '\'' +
-                ", cpfCnpj='" + cpfCnpj + '\'' +
                 ", dataCadastro=" + dataCadastro +
                 ", ativo=" + ativo +
                 '}';
