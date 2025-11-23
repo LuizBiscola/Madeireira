@@ -21,6 +21,36 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activity.LoginActivity"
+            android:exported="false"
+            android:label="Login"
+            android:parentActivityName=".activity.MainActivity" />
+
+        <activity
+            android:name=".activity.InventarioProdutosActivity"
+            android:exported="false"
+            android:label="Inventário de Produtos"
+            android:parentActivityName=".activity.MainActivity" />
+
+        <activity
+            android:name=".activity.ProdutoActivity"
+            android:exported="false"
+            android:label="Produto"
+            android:parentActivityName=".activity.InventarioProdutosActivity" />
+
+        <activity
+            android:name=".activity.UsuariosActivity"
+            android:exported="false"
+            android:label="Usuários"
+            android:parentActivityName=".activity.MainActivity" />
+
+        <activity
+            android:name=".activity.ListaUsuariosActivity"
+            android:exported="false"
+            android:label="Lista de Usuários"
+            android:parentActivityName=".activity.MainActivity" />
     </application>
 
 </manifest>

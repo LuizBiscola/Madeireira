@@ -55,6 +55,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvSubTitulo" />
 
+    <Button
+        android:id="@+id/btnVisualizarUsuarios"
+        android:layout_width="347dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#8B6F47"
+        android:text="Visualizar Usuários"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnExplorarProduto" />
+
     <TextView
         android:id="@+id/tvSubTitulo"
         android:layout_width="wrap_content"

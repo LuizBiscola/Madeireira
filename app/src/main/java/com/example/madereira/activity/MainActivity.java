@@ -1,8 +1,11 @@
 package com.example.madereira.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.madereira.R;
@@ -20,14 +23,65 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "TESTE_MADEIREIRA";
+    private Button btnExplorarProduto;
+    private Button btnEntrarConta;
+    private Button btnCriarConta;
+    private Button btnVisualizarUsuarios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Inicializar botões
+        btnExplorarProduto = findViewById(R.id.btnExplorarProduto);
+        btnEntrarConta = findViewById(R.id.btnEntrarConta);
+        btnCriarConta = findViewById(R.id.btnCriarConta);
+        btnVisualizarUsuarios = findViewById(R.id.btnVisualizarUsuarios);
+
+        // Configurar listeners
+        configurarListeners();
+
         // Executar testes
         testarBancoDeDados();
+    }
+
+    private void configurarListeners() {
+        // Botão para explorar produtos
+        btnExplorarProduto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, InventarioProdutosActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Botão para entrar (login)
+        btnEntrarConta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Botão para criar conta (cadastro)
+        btnCriarConta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, UsuariosActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Botão para visualizar usuários
+        btnVisualizarUsuarios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ListaUsuariosActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void testarBancoDeDados() {

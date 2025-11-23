@@ -10,6 +10,7 @@ public class Usuario {
     private String telefone;
     private String senha;
     private String tipoPerfil; //"Cliente etc..."
+    private String cpfCnpj;
     private Date dataCadastro;
     private boolean ativo;
 
@@ -94,6 +95,14 @@ public class Usuario {
 
     public void setTipoPerfil(String tipoPerfil) {
         this.tipoPerfil = tipoPerfil;
+    }
+
+    public String getCpfCnpj() {
+        return cpfCnpj;
+    }
+
+    public void setCpfCnpj(String cpfCnpj) {
+        this.cpfCnpj = cpfCnpj;
     }
 
     public Date getDataCadastro() {
