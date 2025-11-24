@@ -1,13 +1,16 @@
 package com.example.madereira.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.madereira.R;
 import com.example.madereira.database.DAO.UsuarioDAO;
@@ -16,7 +19,8 @@ import com.example.madereira.model.Usuario;
 public class UsuariosActivity extends AppCompatActivity {
 
     // Componentes da UI
-    private Button btnVoltar, btnSalvarUsuario;
+    private ImageButton btnVoltar;
+    private Button btnSalvarUsuario, btnExcluirUsuario;
     private TextView tvTituloAba;
     private EditText etNome, etEmail, etTelefone, etEndereco, etCpfCnpj, etSenha, etConfirmarSenha;
     private Spinner spinnerTipoPerfil;
@@ -55,6 +59,7 @@ public class UsuariosActivity extends AppCompatActivity {
     private void inicializarComponentes() {
         btnVoltar = findViewById(R.id.btnVoltarUsuario);
         btnSalvarUsuario = findViewById(R.id.btnSalvarUsuario);
+        btnExcluirUsuario = findViewById(R.id.btnExcluirUsuario);
         tvTituloAba = findViewById(R.id.tvTituloAbaUsuario);
         etNome = findViewById(R.id.etNomeUsuario);
         etEmail = findViewById(R.id.etEmailUsuario);
@@ -84,6 +89,7 @@ public class UsuariosActivity extends AppCompatActivity {
             // Modo edição
             tvTituloAba.setText("Editar Usuário");
             btnSalvarUsuario.setText("Atualizar Usuário");
+            btnExcluirUsuario.setVisibility(View.VISIBLE);
             carregarDadosUsuario(usuarioId);
 
             // Campos de senha não obrigatórios na edição
@@ -93,6 +99,7 @@ public class UsuariosActivity extends AppCompatActivity {
             // Modo inserção
             tvTituloAba.setText("Novo Usuário");
             btnSalvarUsuario.setText("Salvar Usuário");
+            btnExcluirUsuario.setVisibility(View.GONE);
         }
     }
 
@@ -135,6 +142,13 @@ public class UsuariosActivity extends AppCompatActivity {
                 salvarUsuario();
             }
         });
+
+        btnExcluirUsuario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmarExclusaoUsuario();
+            }
+        });
     }
 
     private void salvarUsuario() {
@@ -143,16 +157,17 @@ public class UsuariosActivity extends AppCompatActivity {
             return;
         }
 
-        // Obter dados dos campos
-        String nome = etNome.getText().toString().trim();
-        String email = etEmail.getText().toString().trim();
-        String telefone = etTelefone.getText().toString().trim();
-        String endereco = etEndereco.getText().toString().trim();
-        String cpfCnpj = etCpfCnpj.getText().toString().trim();
-        String senha = etSenha.getText().toString().trim();
-        String tipoPerfil = spinnerTipoPerfil.getSelectedItem().toString();
+        try {
+            // Obter dados dos campos
+            String nome = etNome.getText().toString().trim();
+            String email = etEmail.getText().toString().trim();
+            String telefone = etTelefone.getText().toString().trim();
+            String endereco = etEndereco.getText().toString().trim();
+            String cpfCnpj = etCpfCnpj.getText().toString().trim();
+            String senha = etSenha.getText().toString().trim();
+            String tipoPerfil = spinnerTipoPerfil.getSelectedItem().toString();
 
-        if (usuarioId != -1) {
+            if (usuarioId != -1) {
             // Modo edição
             usuarioEmEdicao.setNome(nome);
             usuarioEmEdicao.setEmail(email);
@@ -198,6 +213,11 @@ public class UsuariosActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Erro ao cadastrar usuário", Toast.LENGTH_SHORT).show();
             }
+        }
+        } catch (Exception e) {
+            // Erro ao salvar usuário
+            Toast.makeText(this, "Erro ao salvar usuário: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 
@@ -290,5 +310,46 @@ public class UsuariosActivity extends AppCompatActivity {
         etSenha.setText("");
         etConfirmarSenha.setText("");
         spinnerTipoPerfil.setSelection(0);
+    }
+
+    /**
+     * Confirmar exclusão do usuário
+     */
+    private void confirmarExclusaoUsuario() {
+        if (usuarioEmEdicao == null) {
+            return;
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Confirmar Exclusão")
+                .setMessage("Tem certeza que deseja excluir o usuário \"" + usuarioEmEdicao.getNome() + "\"?\n\nEsta ação não pode ser desfeita.")
+                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        excluirUsuario();
+                    }
+                })
+                .setNegativeButton("Não", null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    /**
+     * Excluir usuário do banco de dados
+     */
+    private void excluirUsuario() {
+        try {
+            int resultado = usuarioDAO.excluir(usuarioId);
+
+            if (resultado > 0) {
+                Toast.makeText(this, "Usuário excluído com sucesso!", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(this, "Erro ao excluir usuário", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Erro ao excluir usuário: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
     }
 }

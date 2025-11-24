@@ -51,6 +51,30 @@
             android:exported="false"
             android:label="Lista de Usuários"
             android:parentActivityName=".activity.MainActivity" />
+
+        <activity
+            android:name=".activity.ListaCategoriasActivity"
+            android:exported="false"
+            android:label="Categorias"
+            android:parentActivityName=".activity.MainActivity" />
+
+        <activity
+            android:name=".activity.CategoriaActivity"
+            android:exported="false"
+            android:label="Categoria"
+            android:parentActivityName=".activity.ListaCategoriasActivity" />
+
+        <activity
+            android:name=".activity.ListaStatusActivity"
+            android:exported="false"
+            android:label="Status"
+            android:parentActivityName=".activity.MainActivity" />
+
+        <activity
+            android:name=".activity.StatusActivity"
+            android:exported="false"
+            android:label="Status"
+            android:parentActivityName=".activity.ListaStatusActivity" />
     </application>
 
 </manifest>

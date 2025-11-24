@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.madereira.R;
@@ -15,7 +16,8 @@ import com.example.madereira.utils.SessionManager;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etSenha;
-    private Button btnEntrar, btnCriarConta, btnVoltar;
+    private Button btnEntrar, btnCriarConta;
+    private ImageButton btnVoltar;
     private UsuarioDAO usuarioDAO;
     private SessionManager sessionManager;
 
@@ -31,11 +33,6 @@ public class LoginActivity extends AppCompatActivity {
         usuarioDAO = new UsuarioDAO(this);
         sessionManager = new SessionManager(this);
 
-        // Verificar se já está logado
-        if (sessionManager.isLoggedIn()) {
-            irParaInventario();
-            return;
-        }
 
         // Configurar listeners
         configurarListeners();
@@ -93,39 +90,34 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Validar login no banco de dados
-        Usuario usuario = usuarioDAO.validarLogin(email, senha);
+        try {
+            // Validar login no banco de dados
+            Usuario usuario = usuarioDAO.validarLogin(email, senha);
 
-        if (usuario != null) {
-            // Login bem-sucedido
-            sessionManager.createLoginSession(
-                    usuario.getId(),
-                    usuario.getNome(),
-                    usuario.getEmail(),
-                    usuario.getTipoPerfil()
-            );
+            if (usuario != null) {
+                // Login bem-sucedido
+                sessionManager.createLoginSession(
+                        usuario.getId(),
+                        usuario.getNome(),
+                        usuario.getEmail(),
+                        usuario.getTipoPerfil()
+                );
 
-            Toast.makeText(this, "Bem-vindo, " + usuario.getNome() + "!", Toast.LENGTH_SHORT).show();
-            irParaInventario();
-        } else {
-            // Login falhou
-            Toast.makeText(this, "Email ou senha incorretos!", Toast.LENGTH_SHORT).show();
-        }
-    }
+                Toast.makeText(this, "Bem-vindo, " + usuario.getNome() + "!", Toast.LENGTH_SHORT).show();
 
-    private void irParaInventario() {
-        Intent intent = new Intent(LoginActivity.this, InventarioProdutosActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Verificar se voltou da tela de cadastro e tentar logar automaticamente
-        if (sessionManager.isLoggedIn()) {
-            irParaInventario();
+                // Redirecionar para MainActivity (volta para tela principal logado)
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            } else {
+                // Login falhou
+                Toast.makeText(this, "Email ou senha incorretos!", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            // Erro ao tentar fazer login
+            Toast.makeText(this, "Erro ao fazer login: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 }

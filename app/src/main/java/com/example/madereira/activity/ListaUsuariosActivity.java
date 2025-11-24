@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,9 +22,8 @@ public class ListaUsuariosActivity extends AppCompatActivity {
     private RecyclerView recyclerViewUsuarios;
     private TextView tvTotalUsuarios;
     private TextView tvMensagemVazio;
-    private Button btnVoltar;
+    private ImageButton btnVoltar;
     private FloatingActionButton fabAdicionar;
-
     private UsuarioAdapter adapter;
     private List<Usuario> listaUsuarios;
     private UsuarioDAO usuarioDAO;
@@ -51,7 +51,6 @@ public class ListaUsuariosActivity extends AppCompatActivity {
 
     private void inicializarComponentes() {
         recyclerViewUsuarios = findViewById(R.id.recyclerViewUsuarios);
-        tvTotalUsuarios = findViewById(R.id.tvTotalUsuarios);
         tvMensagemVazio = findViewById(R.id.tvMensagemVazio);
         btnVoltar = findViewById(R.id.btnVoltarListaUsuarios);
         fabAdicionar = findViewById(R.id.fabAdicionarUsuario);
@@ -105,7 +104,6 @@ public class ListaUsuariosActivity extends AppCompatActivity {
 
     private void atualizarInterface() {
         int total = listaUsuarios.size();
-        tvTotalUsuarios.setText(total + " usuário" + (total != 1 ? "s" : "") + " cadastrado" + (total != 1 ? "s" : ""));
 
         // Mostrar ou ocultar mensagem de lista vazia
         if (total == 0) {

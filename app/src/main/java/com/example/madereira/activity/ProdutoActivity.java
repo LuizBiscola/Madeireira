@@ -1,13 +1,16 @@
 package com.example.madereira.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.madereira.R;
 import com.example.madereira.database.DAO.CategoriaDAO;
@@ -19,7 +22,8 @@ import java.util.List;
 public class ProdutoActivity extends AppCompatActivity {
 
     // Componentes da UI
-    private Button btnVoltar, btnSalvarProduto;
+    private Button btnSalvarProduto, btnExcluirProduto;
+    private ImageButton btnVoltar;
     private TextView tvTituloAba;
     private EditText etNomeProduto, etDescricao, etQuantidade, etPreco;
     private Spinner spinnerCategoria;
@@ -60,6 +64,7 @@ public class ProdutoActivity extends AppCompatActivity {
     private void inicializarComponentes() {
         btnVoltar = findViewById(R.id.btnVoltar);
         btnSalvarProduto = findViewById(R.id.btnSalvarProduto);
+        btnExcluirProduto = findViewById(R.id.btnExcluirProduto);
         tvTituloAba = findViewById(R.id.tvTituloAba);
         etNomeProduto = findViewById(R.id.etNomeProduto);
         etDescricao = findViewById(R.id.etDescricao);
@@ -93,11 +98,13 @@ public class ProdutoActivity extends AppCompatActivity {
             // Modo edição
             tvTituloAba.setText("Editar Produto");
             btnSalvarProduto.setText("Atualizar Produto");
+            btnExcluirProduto.setVisibility(View.VISIBLE);
             carregarDadosProduto(produtoId);
         } else {
             // Modo inserção
             tvTituloAba.setText("Novo Produto");
             btnSalvarProduto.setText("Salvar Produto");
+            btnExcluirProduto.setVisibility(View.GONE);
         }
     }
 
@@ -132,6 +139,13 @@ public class ProdutoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 salvarProduto();
+            }
+        });
+
+        btnExcluirProduto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmarExclusaoProduto();
             }
         });
     }
@@ -257,5 +271,46 @@ public class ProdutoActivity extends AppCompatActivity {
         etQuantidade.setText("");
         etPreco.setText("");
         spinnerCategoria.setSelection(0);
+    }
+
+    /**
+     * Confirmar exclusão do produto
+     */
+    private void confirmarExclusaoProduto() {
+        if (produtoEmEdicao == null) {
+            return;
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Confirmar Exclusão")
+                .setMessage("Tem certeza que deseja excluir o produto \"" + produtoEmEdicao.getNome() + "\"?")
+                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        excluirProduto();
+                    }
+                })
+                .setNegativeButton("Não", null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    /**
+     * Excluir produto do banco de dados
+     */
+    private void excluirProduto() {
+        try {
+            int resultado = produtoDAO.excluir(produtoId);
+
+            if (resultado > 0) {
+                Toast.makeText(this, "Produto excluído com sucesso!", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(this, "Erro ao excluir produto", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Erro ao excluir produto: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
     }
 }

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,9 +23,8 @@ import java.util.List;
 public class InventarioProdutosActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewProdutos;
-    private TextView tvTotalProdutos;
     private TextView tvMensagemVazio;
-    private Button btnVoltar;
+    private ImageButton btnVoltar;
     private FloatingActionButton fabAdicionar;
 
     private ProdutoAdapter adapter;
@@ -36,7 +35,7 @@ public class InventarioProdutosActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inventario_produtos);
+        setContentView(R.layout.activity_lista_produtos);
 
         // Inicializar SessionManager
         sessionManager = new SessionManager(this);
@@ -44,7 +43,8 @@ public class InventarioProdutosActivity extends AppCompatActivity {
         // Verificar se está logado
         if (!sessionManager.isLoggedIn()) {
             Toast.makeText(this, "Você precisa fazer login primeiro!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(InventarioProdutosActivity.this, LoginActivity.class);
+            Intent intent = new Intent(InventarioProdutosActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
             return;
@@ -68,7 +68,6 @@ public class InventarioProdutosActivity extends AppCompatActivity {
 
     private void inicializarComponentes() {
         recyclerViewProdutos = findViewById(R.id.recyclerViewProdutos);
-        tvTotalProdutos = findViewById(R.id.tvTotalProdutos);
         tvMensagemVazio = findViewById(R.id.tvMensagemVazio);
         btnVoltar = findViewById(R.id.btnVoltarInventario);
         fabAdicionar = findViewById(R.id.fabAdicionarProduto);
@@ -116,9 +115,6 @@ public class InventarioProdutosActivity extends AppCompatActivity {
         // Atualizar adapter
         adapter.atualizarLista(listaProdutos);
 
-        // Atualizar contador
-        atualizarContador();
-
         // Mostrar/esconder mensagem de lista vazia
         if (listaProdutos.isEmpty()) {
             tvMensagemVazio.setVisibility(View.VISIBLE);
@@ -126,17 +122,6 @@ public class InventarioProdutosActivity extends AppCompatActivity {
         } else {
             tvMensagemVazio.setVisibility(View.GONE);
             recyclerViewProdutos.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void atualizarContador() {
-        int total = listaProdutos.size();
-        if (total == 0) {
-            tvTotalProdutos.setText("Nenhum produto cadastrado");
-        } else if (total == 1) {
-            tvTotalProdutos.setText("1 produto cadastrado");
-        } else {
-            tvTotalProdutos.setText(total + " produtos cadastrados");
         }
     }
 

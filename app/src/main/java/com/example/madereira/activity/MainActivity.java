@@ -17,6 +17,7 @@ import com.example.madereira.model.Categoria;
 import com.example.madereira.model.Status;
 import com.example.madereira.model.Usuario;
 import com.example.madereira.model.Produto;
+import com.example.madereira.utils.SessionManager;
 
 import java.util.List;
 
@@ -27,23 +28,36 @@ public class MainActivity extends AppCompatActivity {
     private Button btnEntrarConta;
     private Button btnCriarConta;
     private Button btnVisualizarUsuarios;
+    private Button btnGerenciarCategorias;
+    private Button btnGerenciarStatus;
+    private Button btnLogout;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Inicializar SessionManager
+        sessionManager = new SessionManager(this);
+
         // Inicializar botões
         btnExplorarProduto = findViewById(R.id.btnExplorarProduto);
         btnEntrarConta = findViewById(R.id.btnEntrarConta);
         btnCriarConta = findViewById(R.id.btnCriarConta);
         btnVisualizarUsuarios = findViewById(R.id.btnVisualizarUsuarios);
+        btnGerenciarCategorias = findViewById(R.id.btnGerenciarCategorias);
+        btnGerenciarStatus = findViewById(R.id.btnGerenciarStatus);
+        btnLogout = findViewById(R.id.btnLogout);
+
+        // Atualizar UI baseado no estado de login
+        atualizarUIEstadoLogin();
 
         // Configurar listeners
         configurarListeners();
 
-        // Executar testes
-        testarBancoDeDados();
+        // Executar testes (comentado por padrão)
+        // testarBancoDeDados();
     }
 
     private void configurarListeners() {
@@ -82,6 +96,68 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Botão para gerenciar categorias
+        btnGerenciarCategorias.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ListaCategoriasActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Botão para gerenciar status
+        btnGerenciarStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ListaStatusActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Botão de logout
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                realizarLogout();
+            }
+        });
+    }
+
+    /**
+     * Atualiza a UI baseado no estado de login do usuário
+     */
+    private void atualizarUIEstadoLogin() {
+        if (sessionManager.isLoggedIn()) {
+            // Usuário está logado
+            btnEntrarConta.setVisibility(View.GONE);
+            btnCriarConta.setVisibility(View.GONE);
+            btnLogout.setVisibility(View.VISIBLE);
+
+            String nomeUsuario = sessionManager.getUserName();
+            Toast.makeText(this, "Bem-vindo, " + nomeUsuario + "!", Toast.LENGTH_SHORT).show();
+        } else {
+            // Usuário NÃO está logado
+            btnEntrarConta.setVisibility(View.VISIBLE);
+            btnCriarConta.setVisibility(View.VISIBLE);
+            btnLogout.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Realiza o logout do usuário
+     */
+    private void realizarLogout() {
+        sessionManager.logout();
+        Toast.makeText(this, "Logout realizado com sucesso!", Toast.LENGTH_SHORT).show();
+        atualizarUIEstadoLogin();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Atualizar UI quando voltar para esta tela
+        atualizarUIEstadoLogin();
     }
 
     private void testarBancoDeDados() {

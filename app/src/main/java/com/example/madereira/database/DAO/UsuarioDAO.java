@@ -31,6 +31,7 @@ public class UsuarioDAO {
         values.put("telefone", usuario.getTelefone());
         values.put("senha", usuario.getSenha());
         values.put("tipoPerfil", usuario.getTipoPerfil());
+        values.put("cpfCnpj", usuario.getCpfCnpj());
         values.put("dataCadastro", dateFormat.format(usuario.getDataCadastro()));
         values.put("ativo", usuario.isAtivo() ? 1 : 0);
 
@@ -101,6 +102,7 @@ public class UsuarioDAO {
         values.put("telefone", usuario.getTelefone());
         values.put("senha", usuario.getSenha());
         values.put("tipoPerfil", usuario.getTipoPerfil());
+        values.put("cpfCnpj", usuario.getCpfCnpj());
         values.put("ativo", usuario.isAtivo() ? 1 : 0);
 
         int linhasAfetadas = db.update(DatabaseHelper.TABLE_USUARIO, values, "id = ?",
@@ -145,6 +147,13 @@ public class UsuarioDAO {
         usuario.setTelefone(cursor.getString(cursor.getColumnIndexOrThrow("telefone")));
         usuario.setSenha(cursor.getString(cursor.getColumnIndexOrThrow("senha")));
         usuario.setTipoPerfil(cursor.getString(cursor.getColumnIndexOrThrow("tipoPerfil")));
+
+        // CPF/CNPJ pode ser nulo
+        int cpfCnpjIndex = cursor.getColumnIndex("cpfCnpj");
+        if (cpfCnpjIndex != -1 && !cursor.isNull(cpfCnpjIndex)) {
+            usuario.setCpfCnpj(cursor.getString(cpfCnpjIndex));
+        }
+
         usuario.setAtivo(cursor.getInt(cursor.getColumnIndexOrThrow("ativo")) == 1);
 
         try {

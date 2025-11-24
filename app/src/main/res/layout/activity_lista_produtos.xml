@@ -17,17 +17,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Botão Voltar -->
-    <Button
+    <ImageButton
         android:id="@+id/btnVoltarInventario"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#FFFFFF"
-        android:text="←"
-        android:textColor="#8B6F47"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+
+        android:padding="12dp"
+        android:scaleType="fitCenter"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:tint="@android:color/white"
+
+        android:src="@drawable/leftarrow"
+        android:contentDescription="Voltar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,17 +49,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Contador de Produtos -->
-    <TextView
-        android:id="@+id/tvTotalProdutos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="0 produtos cadastrados"
-        android:textColor="#E0E0E0"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTituloInventario" />
 
     <!-- RecyclerView para lista de produtos -->
     <androidx.recyclerview.widget.RecyclerView

@@ -20,15 +20,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
+        <ImageButton
             android:id="@+id/btnVoltarUsuario"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:text="←"
-            android:textSize="20sp"
-            android:textColor="#8B6F47"
-            android:backgroundTint="#FFFFFF"
-            style="?attr/materialButtonOutlinedStyle" />
+
+            android:background="#8B6F47"
+
+            android:src="@drawable/leftarrow"
+            app:tint="#FFFFFF"
+
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+
+            android:elevation="2dp"
+            android:contentDescription="Voltar" />
 
         <TextView
             android:id="@+id/tvTituloAbaUsuario"
@@ -253,6 +259,19 @@
                 android:textStyle="bold"
                 android:backgroundTint="#8B6F47"
                 android:textColor="@android:color/white"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Botão Excluir -->
+            <Button
+                android:id="@+id/btnExcluirUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Excluir Usuário"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:backgroundTint="#D32F2F"
+                android:textColor="@android:color/white"
+                android:visibility="gone"
                 android:layout_marginBottom="24dp" />
 
         </LinearLayout>

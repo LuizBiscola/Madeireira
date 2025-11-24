@@ -8,7 +8,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Nome e versão do banco
     private static final String DATABASE_NAME = "madeireira.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Nomes das tabelas
     public static final String TABLE_USUARIO = "usuario";
