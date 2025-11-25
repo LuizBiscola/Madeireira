@@ -31,19 +31,14 @@ public class ListaCategoriasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_categorias);
 
-        // Inicializar componentes
         inicializarComponentes();
 
-        // Inicializar DAO
         categoriaDAO = new CategoriaDAO(this);
 
-        // Configurar RecyclerView
         configurarRecyclerView();
 
-        // Configurar listeners
         configurarListeners();
 
-        // Carregar categorias
         carregarCategorias();
     }
 
@@ -59,7 +54,6 @@ public class ListaCategoriasActivity extends AppCompatActivity {
         adapter = new CategoriaAdapter(listaCategorias, new CategoriaAdapter.OnCategoriaClickListener() {
             @Override
             public void onCategoriaClick(Categoria categoria) {
-                // Abrir tela de edição da categoria
                 Intent intent = new Intent(ListaCategoriasActivity.this, CategoriaActivity.class);
                 intent.putExtra("categoria_id", categoria.getId());
                 startActivity(intent);
@@ -71,7 +65,6 @@ public class ListaCategoriasActivity extends AppCompatActivity {
     }
 
     private void configurarListeners() {
-        // Botão voltar
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,7 +72,6 @@ public class ListaCategoriasActivity extends AppCompatActivity {
             }
         });
 
-        // Botão adicionar categoria
         fabAdicionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,10 +82,8 @@ public class ListaCategoriasActivity extends AppCompatActivity {
     }
 
     private void carregarCategorias() {
-        // Buscar categorias do banco
         listaCategorias = categoriaDAO.listarTodas();
 
-        // Atualizar adapter
         adapter.atualizarLista(listaCategorias);
 
         // Mostrar/esconder mensagem de lista vazia
@@ -109,7 +99,7 @@ public class ListaCategoriasActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Recarregar categorias quando voltar para esta tela
+        // Recarregar categorias quando voltar para a tela
         carregarCategorias();
     }
 }

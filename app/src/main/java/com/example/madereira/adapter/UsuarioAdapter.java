@@ -59,32 +59,16 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
 
         private TextView tvNome;
         private TextView tvEmail;
-        private TextView tvTipo;
-        private TextView tvStatus;
 
         public UsuarioViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNome = itemView.findViewById(R.id.tvNomeUsuarioItem);
             tvEmail = itemView.findViewById(R.id.tvEmailUsuarioItem);
-            tvTipo = itemView.findViewById(R.id.tvTipoUsuarioItem);
-            tvStatus = itemView.findViewById(R.id.tvStatusUsuarioItem);
         }
 
         public void bind(final Usuario usuario, final OnUsuarioClickListener listener) {
             tvNome.setText(usuario.getNome());
             tvEmail.setText(usuario.getEmail());
-
-            // Tipo de perfil
-            tvTipo.setText(usuario.getTipoPerfil() != null ? usuario.getTipoPerfil() : "Cliente");
-
-            // Status
-            if (usuario.isAtivo()) {
-                tvStatus.setText("Ativo");
-                tvStatus.setBackgroundColor(Color.parseColor("#4CAF50")); // Verde
-            } else {
-                tvStatus.setText("Inativo");
-                tvStatus.setBackgroundColor(Color.parseColor("#9E9E9E")); // Cinza
-            }
 
             // Click no item
             itemView.setOnClickListener(new View.OnClickListener() {

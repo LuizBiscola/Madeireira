@@ -191,24 +191,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="24dp" />
 
-            <!-- Tipo de Perfil -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tipo de Perfil"
-                android:textSize="14sp"
-                android:textColor="#666666"
-                android:layout_marginBottom="8dp" />
-
-            <Spinner
-                android:id="@+id/spinnerTipoPerfil"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="56dp"
-                android:padding="16dp"
-                android:background="@android:color/white"
-                android:layout_marginBottom="24dp" />
-
             <!-- Senha -->
             <TextView
                 android:layout_width="wrap_content"

@@ -29,7 +29,7 @@
             android:parentActivityName=".activity.MainActivity" />
 
         <activity
-            android:name=".activity.InventarioProdutosActivity"
+            android:name=".activity.ListaProdutosActivity"
             android:exported="false"
             android:label="Inventário de Produtos"
             android:parentActivityName=".activity.MainActivity" />
@@ -38,7 +38,7 @@
             android:name=".activity.ProdutoActivity"
             android:exported="false"
             android:label="Produto"
-            android:parentActivityName=".activity.InventarioProdutosActivity" />
+            android:parentActivityName=".activity.ListaProdutosActivity" />
 
         <activity
             android:name=".activity.UsuariosActivity"

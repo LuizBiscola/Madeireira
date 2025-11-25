@@ -34,16 +34,12 @@ public class CategoriaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categoria);
 
-        // Inicializar DAO
         categoriaDAO = new CategoriaDAO(this);
 
-        // Inicializar componentes
         inicializarComponentes();
 
-        // Verificar se é edição
         verificarModoEdicao();
 
-        // Configurar listeners
         configurarListeners();
     }
 
@@ -56,7 +52,7 @@ public class CategoriaActivity extends AppCompatActivity {
     }
 
     private void verificarModoEdicao() {
-        // Verificar se foi passado um ID de categoria para edição
+        // Verificar se foi passado um ID
         categoriaId = getIntent().getIntExtra("categoria_id", -1);
 
         if (categoriaId != -1) {
@@ -105,13 +101,11 @@ public class CategoriaActivity extends AppCompatActivity {
     }
 
     private void salvarCategoria() {
-        // Validar campos
         if (!validarCampos()) {
             return;
         }
 
         try {
-            // Obter dados dos campos
             String descricao = etDescricaoCategoria.getText().toString().trim();
 
             if (categoriaId != -1) {
@@ -149,7 +143,6 @@ public class CategoriaActivity extends AppCompatActivity {
     private boolean validarCampos() {
         String descricao = etDescricaoCategoria.getText().toString().trim();
 
-        // Validar descrição
         if (descricao.isEmpty()) {
             etDescricaoCategoria.setError("Descrição é obrigatória");
             etDescricaoCategoria.requestFocus();
@@ -169,9 +162,6 @@ public class CategoriaActivity extends AppCompatActivity {
         etDescricaoCategoria.setText("");
     }
 
-    /**
-     * Confirmar exclusão da categoria
-     */
     private void confirmarExclusaoCategoria() {
         if (categoriaEmEdicao == null) {
             return;
@@ -191,9 +181,6 @@ public class CategoriaActivity extends AppCompatActivity {
                 .show();
     }
 
-    /**
-     * Excluir categoria do banco de dados
-     */
     private void excluirCategoria() {
         try {
             int resultado = categoriaDAO.excluir(categoriaId);

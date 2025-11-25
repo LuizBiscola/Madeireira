@@ -9,27 +9,22 @@ public class Usuario {
     private String endereco;
     private String telefone;
     private String senha;
-    private String tipoPerfil; //"Cliente etc..."
     private String cpfCnpj;
     private Date dataCadastro;
-    private boolean ativo;
 
     //Construtor vazio
     public Usuario(){
         this.dataCadastro = new Date();
-        this.ativo = true;
     }
 //construtor com todos os atributos
-    public Usuario(int id, String nome, String email, String endereco, String telefone, String senha, String tipoPerfil) {
+    public Usuario(int id, String nome, String email, String endereco, String telefone, String senha) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.endereco = endereco;
         this.telefone = telefone;
         this.senha = senha;
-        this.tipoPerfil = tipoPerfil;
         this.dataCadastro = new Date();
-        this.ativo = true;
     }
 
     public Usuario(String nome, String email, String endereco, String telefone, String senha){
@@ -38,9 +33,7 @@ public class Usuario {
         this.endereco = endereco;
         this.telefone = telefone;
         this.senha = senha;
-        this. tipoPerfil = "Cliente"; // padrão
         this.dataCadastro = new Date();
-        this.ativo = true;
     }
     //Getters and Setters
     public int getId() {
@@ -88,15 +81,6 @@ public class Usuario {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-
-    public String getTipoPerfil() {
-        return tipoPerfil;
-    }
-
-    public void setTipoPerfil(String tipoPerfil) {
-        this.tipoPerfil = tipoPerfil;
-    }
-
     public String getCpfCnpj() {
         return cpfCnpj;
     }
@@ -113,14 +97,6 @@ public class Usuario {
         this.dataCadastro = dataCadastro;
     }
 
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
-    }
-
     @Override
     public String toString() {
         return "Usuario{" +
@@ -129,9 +105,7 @@ public class Usuario {
                 ", email='" + email + '\'' +
                 ", endereco='" + endereco + '\'' +
                 ", telefone='" + telefone + '\'' +
-                ", tipoPerfil='" + tipoPerfil + '\'' +
                 ", dataCadastro=" + dataCadastro +
-                ", ativo=" + ativo +
                 '}';
     }
 }

@@ -30,23 +30,21 @@ public class UsuarioDAO {
         values.put("endereco", usuario.getEndereco());
         values.put("telefone", usuario.getTelefone());
         values.put("senha", usuario.getSenha());
-        values.put("tipoPerfil", usuario.getTipoPerfil());
         values.put("cpfCnpj", usuario.getCpfCnpj());
         values.put("dataCadastro", dateFormat.format(usuario.getDataCadastro()));
-        values.put("ativo", usuario.isAtivo() ? 1 : 0);
 
         long id = db.insert(DatabaseHelper.TABLE_USUARIO, null, values);
         db.close();
         return id;
     }
 
-    // READ - Listar Todos (somente ativos)
+    // READ - Listar Todos
     public List<Usuario> listarTodos() {
         List<Usuario> listaUsuarios = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.query(DatabaseHelper.TABLE_USUARIO, null, "ativo = 1",
-                null, null, null, "nome ASC");
+        Cursor cursor = db.query(DatabaseHelper.TABLE_USUARIO,
+                null, null, null, null, null, "nome ASC");
 
         if (cursor.moveToFirst()) {
             do {
@@ -101,9 +99,7 @@ public class UsuarioDAO {
         values.put("endereco", usuario.getEndereco());
         values.put("telefone", usuario.getTelefone());
         values.put("senha", usuario.getSenha());
-        values.put("tipoPerfil", usuario.getTipoPerfil());
         values.put("cpfCnpj", usuario.getCpfCnpj());
-        values.put("ativo", usuario.isAtivo() ? 1 : 0);
 
         int linhasAfetadas = db.update(DatabaseHelper.TABLE_USUARIO, values, "id = ?",
                 new String[]{String.valueOf(usuario.getId())});
@@ -124,7 +120,7 @@ public class UsuarioDAO {
     public Usuario validarLogin(String email, String senha) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(DatabaseHelper.TABLE_USUARIO, null,
-                "email = ? AND senha = ? AND ativo = 1",
+                "email = ? AND senha = ?",
                 new String[]{email, senha}, null, null, null);
 
         Usuario usuario = null;
@@ -146,15 +142,12 @@ public class UsuarioDAO {
         usuario.setEndereco(cursor.getString(cursor.getColumnIndexOrThrow("endereco")));
         usuario.setTelefone(cursor.getString(cursor.getColumnIndexOrThrow("telefone")));
         usuario.setSenha(cursor.getString(cursor.getColumnIndexOrThrow("senha")));
-        usuario.setTipoPerfil(cursor.getString(cursor.getColumnIndexOrThrow("tipoPerfil")));
 
         // CPF/CNPJ pode ser nulo
         int cpfCnpjIndex = cursor.getColumnIndex("cpfCnpj");
         if (cpfCnpjIndex != -1 && !cursor.isNull(cpfCnpjIndex)) {
             usuario.setCpfCnpj(cursor.getString(cpfCnpjIndex));
         }
-
-        usuario.setAtivo(cursor.getInt(cursor.getColumnIndexOrThrow("ativo")) == 1);
 
         try {
             String dataStr = cursor.getString(cursor.getColumnIndexOrThrow("dataCadastro"));

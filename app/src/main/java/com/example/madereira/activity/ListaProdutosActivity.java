@@ -20,7 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InventarioProdutosActivity extends AppCompatActivity {
+public class ListaProdutosActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewProdutos;
     private TextView tvMensagemVazio;
@@ -43,26 +43,21 @@ public class InventarioProdutosActivity extends AppCompatActivity {
         // Verificar se está logado
         if (!sessionManager.isLoggedIn()) {
             Toast.makeText(this, "Você precisa fazer login primeiro!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(InventarioProdutosActivity.this, MainActivity.class);
+            Intent intent = new Intent(ListaProdutosActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
             return;
         }
 
-        // Inicializar componentes
         inicializarComponentes();
 
-        // Inicializar DAO
         produtoDAO = new ProdutoDAO(this);
 
-        // Configurar RecyclerView
         configurarRecyclerView();
 
-        // Configurar listeners
         configurarListeners();
 
-        // Carregar produtos
         carregarProdutos();
     }
 
@@ -79,7 +74,7 @@ public class InventarioProdutosActivity extends AppCompatActivity {
             @Override
             public void onProdutoClick(Produto produto) {
                 // Abrir tela de edição do produto
-                Intent intent = new Intent(InventarioProdutosActivity.this, ProdutoActivity.class);
+                Intent intent = new Intent(ListaProdutosActivity.this, ProdutoActivity.class);
                 intent.putExtra("produto_id", produto.getId());
                 startActivity(intent);
             }
@@ -90,7 +85,6 @@ public class InventarioProdutosActivity extends AppCompatActivity {
     }
 
     private void configurarListeners() {
-        // Botão voltar
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,21 +92,18 @@ public class InventarioProdutosActivity extends AppCompatActivity {
             }
         });
 
-        // Botão adicionar produto
         fabAdicionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(InventarioProdutosActivity.this, ProdutoActivity.class);
+                Intent intent = new Intent(ListaProdutosActivity.this, ProdutoActivity.class);
                 startActivity(intent);
             }
         });
     }
 
     private void carregarProdutos() {
-        // Buscar produtos do banco com JOIN (para ter nome da categoria e status)
         listaProdutos = produtoDAO.listarTodosComJoin();
 
-        // Atualizar adapter
         adapter.atualizarLista(listaProdutos);
 
         // Mostrar/esconder mensagem de lista vazia
@@ -123,30 +114,6 @@ public class InventarioProdutosActivity extends AppCompatActivity {
             tvMensagemVazio.setVisibility(View.GONE);
             recyclerViewProdutos.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_inventario, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_logout) {
-            realizarLogout();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void realizarLogout() {
-        sessionManager.logout();
-        Toast.makeText(this, "Logout realizado com sucesso!", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(InventarioProdutosActivity.this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
     }
 
     @Override

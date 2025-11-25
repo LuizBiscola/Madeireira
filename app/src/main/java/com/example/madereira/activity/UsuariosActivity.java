@@ -18,12 +18,11 @@ import com.example.madereira.model.Usuario;
 
 public class UsuariosActivity extends AppCompatActivity {
 
-    // Componentes da UI
+    // Componentes
     private ImageButton btnVoltar;
     private Button btnSalvarUsuario, btnExcluirUsuario;
     private TextView tvTituloAba;
     private EditText etNome, etEmail, etTelefone, etEndereco, etCpfCnpj, etSenha, etConfirmarSenha;
-    private Spinner spinnerTipoPerfil;
 
     // DAO
     private UsuarioDAO usuarioDAO;
@@ -32,27 +31,17 @@ public class UsuariosActivity extends AppCompatActivity {
     private Usuario usuarioEmEdicao;
     private int usuarioId = -1;
 
-    // Tipos de perfil
-    private String[] tiposPerfil = {"Cliente", "Funcionario", "Administrador"};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usuario);
 
-        // Inicializar DAO
         usuarioDAO = new UsuarioDAO(this);
 
-        // Inicializar componentes
         inicializarComponentes();
 
-        // Carregar tipos de perfil no Spinner
-        carregarTiposPerfil();
-
-        // Verificar se é edição
         verificarModoEdicao();
 
-        // Configurar listeners
         configurarListeners();
     }
 
@@ -68,21 +57,9 @@ public class UsuariosActivity extends AppCompatActivity {
         etCpfCnpj = findViewById(R.id.etCpfCnpjUsuario);
         etSenha = findViewById(R.id.etSenhaUsuario);
         etConfirmarSenha = findViewById(R.id.etConfirmarSenhaUsuario);
-        spinnerTipoPerfil = findViewById(R.id.spinnerTipoPerfil);
-    }
-
-    private void carregarTiposPerfil() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                tiposPerfil
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTipoPerfil.setAdapter(adapter);
     }
 
     private void verificarModoEdicao() {
-        // Verificar se foi passado um ID de usuário para edição
         usuarioId = getIntent().getIntExtra("usuario_id", -1);
 
         if (usuarioId != -1) {
@@ -113,16 +90,6 @@ public class UsuariosActivity extends AppCompatActivity {
             etEndereco.setText(usuarioEmEdicao.getEndereco());
             etCpfCnpj.setText(usuarioEmEdicao.getCpfCnpj());
 
-            // Selecionar tipo de perfil no Spinner
-            String tipoPerfil = usuarioEmEdicao.getTipoPerfil();
-            for (int i = 0; i < tiposPerfil.length; i++) {
-                if (tiposPerfil[i].equals(tipoPerfil)) {
-                    spinnerTipoPerfil.setSelection(i);
-                    break;
-                }
-            }
-
-            // Limpar campos de senha
             etSenha.setText("");
             etConfirmarSenha.setText("");
         }
@@ -152,70 +119,63 @@ public class UsuariosActivity extends AppCompatActivity {
     }
 
     private void salvarUsuario() {
-        // Validar campos
         if (!validarCampos()) {
             return;
         }
 
         try {
-            // Obter dados dos campos
             String nome = etNome.getText().toString().trim();
             String email = etEmail.getText().toString().trim();
             String telefone = etTelefone.getText().toString().trim();
             String endereco = etEndereco.getText().toString().trim();
             String cpfCnpj = etCpfCnpj.getText().toString().trim();
             String senha = etSenha.getText().toString().trim();
-            String tipoPerfil = spinnerTipoPerfil.getSelectedItem().toString();
 
             if (usuarioId != -1) {
-            // Modo edição
-            usuarioEmEdicao.setNome(nome);
-            usuarioEmEdicao.setEmail(email);
-            usuarioEmEdicao.setTelefone(telefone);
-            usuarioEmEdicao.setEndereco(endereco);
-            usuarioEmEdicao.setCpfCnpj(cpfCnpj);
-            usuarioEmEdicao.setTipoPerfil(tipoPerfil);
+                // Modo edição
+                usuarioEmEdicao.setNome(nome);
+                usuarioEmEdicao.setEmail(email);
+                usuarioEmEdicao.setTelefone(telefone);
+                usuarioEmEdicao.setEndereco(endereco);
+                usuarioEmEdicao.setCpfCnpj(cpfCnpj);
 
-            // Atualizar senha apenas se foi informada
-            if (!senha.isEmpty()) {
-                usuarioEmEdicao.setSenha(senha);
-            }
+                // Atualizar senha apenas se foi informada
+                if (!senha.isEmpty()) {
+                    usuarioEmEdicao.setSenha(senha);
+                }
 
-            int resultado = usuarioDAO.atualizar(usuarioEmEdicao);
+                int resultado = usuarioDAO.atualizar(usuarioEmEdicao);
 
-            if (resultado > 0) {
-                Toast.makeText(this, "Usuário atualizado com sucesso!", Toast.LENGTH_SHORT).show();
-                finish();
+                if (resultado > 0) {
+                    Toast.makeText(this, "Usuário atualizado com sucesso!", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(this, "Erro ao atualizar usuário", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(this, "Erro ao atualizar usuário", Toast.LENGTH_SHORT).show();
+                // Modo inserção
+                Usuario usuarioExistente = usuarioDAO.buscarPorEmail(email);
+
+                if (usuarioExistente != null) {
+                    etEmail.setError("Este email já está cadastrado");
+                    etEmail.requestFocus();
+                    return;
+                }
+
+                Usuario novoUsuario = new Usuario(nome, email, endereco, telefone, senha);
+                novoUsuario.setCpfCnpj(cpfCnpj);
+
+                long resultado = usuarioDAO.inserir(novoUsuario);
+
+                if (resultado != -1) {
+                    Toast.makeText(this, "Usuário cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
+                    limparCampos();
+                    finish();
+                } else {
+                    Toast.makeText(this, "Erro ao cadastrar usuário", Toast.LENGTH_SHORT).show();
+                }
             }
-        } else {
-            // Modo inserção
-
-            // Verificar se email já existe
-            Usuario usuarioExistente = usuarioDAO.buscarPorEmail(email);
-            if (usuarioExistente != null) {
-                etEmail.setError("Este email já está cadastrado");
-                etEmail.requestFocus();
-                return;
-            }
-
-            Usuario novoUsuario = new Usuario(nome, email, endereco, telefone, senha);
-            novoUsuario.setTipoPerfil(tipoPerfil);
-            novoUsuario.setCpfCnpj(cpfCnpj);
-
-            long resultado = usuarioDAO.inserir(novoUsuario);
-
-            if (resultado != -1) {
-                Toast.makeText(this, "Usuário cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
-                limparCampos();
-                finish();
-            } else {
-                Toast.makeText(this, "Erro ao cadastrar usuário", Toast.LENGTH_SHORT).show();
-            }
-        }
         } catch (Exception e) {
-            // Erro ao salvar usuário
             Toast.makeText(this, "Erro ao salvar usuário: " + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
@@ -228,14 +188,12 @@ public class UsuariosActivity extends AppCompatActivity {
         String senha = etSenha.getText().toString().trim();
         String confirmarSenha = etConfirmarSenha.getText().toString().trim();
 
-        // Validar nome
         if (nome.isEmpty()) {
             etNome.setError("Nome é obrigatório");
             etNome.requestFocus();
             return false;
         }
 
-        // Validar email
         if (email.isEmpty()) {
             etEmail.setError("Email é obrigatório");
             etEmail.requestFocus();
@@ -248,7 +206,6 @@ public class UsuariosActivity extends AppCompatActivity {
             return false;
         }
 
-        // Validar telefone
         if (telefone.isEmpty()) {
             etTelefone.setError("Telefone é obrigatório");
             etTelefone.requestFocus();
@@ -309,12 +266,8 @@ public class UsuariosActivity extends AppCompatActivity {
         etCpfCnpj.setText("");
         etSenha.setText("");
         etConfirmarSenha.setText("");
-        spinnerTipoPerfil.setSelection(0);
     }
 
-    /**
-     * Confirmar exclusão do usuário
-     */
     private void confirmarExclusaoUsuario() {
         if (usuarioEmEdicao == null) {
             return;
@@ -334,9 +287,6 @@ public class UsuariosActivity extends AppCompatActivity {
                 .show();
     }
 
-    /**
-     * Excluir usuário do banco de dados
-     */
     private void excluirUsuario() {
         try {
             int resultado = usuarioDAO.excluir(usuarioId);

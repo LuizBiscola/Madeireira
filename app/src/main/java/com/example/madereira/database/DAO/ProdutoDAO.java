@@ -22,7 +22,6 @@ public class ProdutoDAO {
         dbHelper = new DatabaseHelper(context);
     }
 
-    // CREATE
     public long inserir(Produto produto) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -40,7 +39,6 @@ public class ProdutoDAO {
         return id;
     }
 
-    // READ - Listar Todos (SEM JOIN)
     public List<Produto> listarTodos() {
         List<Produto> listaProdutos = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -60,7 +58,6 @@ public class ProdutoDAO {
         return listaProdutos;
     }
 
-    // READ - Listar Todos COM JOIN (melhor para exibição)
     public List<Produto> listarTodosComJoin() {
         List<Produto> listaProdutos = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();

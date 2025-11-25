@@ -64,7 +64,6 @@
         app:layout_constraintTop_toBottomOf="@id/viewBarraSuperior"
         tools:listitem="@android:layout/simple_list_item_2" />
 
-    <!-- TextView para mensagem quando não há produtos -->
     <TextView
         android:id="@+id/tvMensagemVazio"
         android:layout_width="wrap_content"

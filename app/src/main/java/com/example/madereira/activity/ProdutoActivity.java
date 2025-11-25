@@ -15,8 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.madereira.R;
 import com.example.madereira.database.DAO.CategoriaDAO;
 import com.example.madereira.database.DAO.ProdutoDAO;
+import com.example.madereira.database.DAO.StatusDAO;
 import com.example.madereira.model.Categoria;
 import com.example.madereira.model.Produto;
+import com.example.madereira.model.Status;
+
 import java.util.List;
 
 public class ProdutoActivity extends AppCompatActivity {
@@ -27,15 +30,18 @@ public class ProdutoActivity extends AppCompatActivity {
     private TextView tvTituloAba;
     private EditText etNomeProduto, etDescricao, etQuantidade, etPreco;
     private Spinner spinnerCategoria;
+    private Spinner spinnerStatus;
 
-    // DAOs
+    // DAO
     private ProdutoDAO produtoDAO;
     private CategoriaDAO categoriaDAO;
+    private StatusDAO statusDAO;
 
     // Lista de categorias
     private List<Categoria> listaCategorias;
+    private List<Status> listaStatus;
 
-    // Produto para edição (se houver)
+    // Produto para edição
     private Produto produtoEmEdicao;
     private int produtoId = -1;
 
@@ -47,17 +53,16 @@ public class ProdutoActivity extends AppCompatActivity {
         // Inicializar DAOs
         produtoDAO = new ProdutoDAO(this);
         categoriaDAO = new CategoriaDAO(this);
+        statusDAO = new StatusDAO(this);
 
-        // Inicializar componentes
         inicializarComponentes();
 
-        // Carregar categorias no Spinner
         carregarCategorias();
 
-        // Verificar se é edição
+        carregarStatus();
+
         verificarModoEdicao();
 
-        // Configurar listeners
         configurarListeners();
     }
 
@@ -71,6 +76,7 @@ public class ProdutoActivity extends AppCompatActivity {
         etQuantidade = findViewById(R.id.etQuantidade);
         etPreco = findViewById(R.id.etPreco);
         spinnerCategoria = findViewById(R.id.spinnerCategoria);
+        spinnerStatus = findViewById(R.id.spinnerStatus);
     }
 
     private void carregarCategorias() {
@@ -90,8 +96,24 @@ public class ProdutoActivity extends AppCompatActivity {
         spinnerCategoria.setAdapter(adapter);
     }
 
+    private void carregarStatus() {
+        listaStatus = statusDAO.listarTodos();
+
+        if (listaStatus.isEmpty()) {
+            Toast.makeText(this, "Nenhum status disponível", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ArrayAdapter<Status> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                listaStatus
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerStatus.setAdapter(adapter);
+    }
+
     private void verificarModoEdicao() {
-        // Verificar se foi passado um ID de produto para edição
         produtoId = getIntent().getIntExtra("produto_id", -1);
 
         if (produtoId != -1) {
@@ -117,10 +139,16 @@ public class ProdutoActivity extends AppCompatActivity {
             etQuantidade.setText(String.valueOf((int)produtoEmEdicao.getQuantidade()));
             etPreco.setText(String.format("%.2f", produtoEmEdicao.getPreco()));
 
-            // Selecionar categoria no Spinner
             for (int i = 0; i < listaCategorias.size(); i++) {
                 if (listaCategorias.get(i).getId() == produtoEmEdicao.getFkCategoria()) {
                     spinnerCategoria.setSelection(i);
+                    break;
+                }
+            }
+
+            for (int i = 0; i < listaStatus.size(); i++) {
+                if (listaStatus.get(i).getId() == produtoEmEdicao.getFkStatus()) {
+                    spinnerStatus.setSelection(i);
                     break;
                 }
             }
@@ -151,12 +179,10 @@ public class ProdutoActivity extends AppCompatActivity {
     }
 
     private void salvarProduto() {
-        // Validar campos
         if (!validarCampos()) {
             return;
         }
 
-        // Obter dados dos campos
         String nome = etNomeProduto.getText().toString().trim();
         String descricao = etDescricao.getText().toString().trim();
         double quantidade = Double.parseDouble(etQuantidade.getText().toString().trim());
@@ -166,13 +192,8 @@ public class ProdutoActivity extends AppCompatActivity {
         Categoria categoriaSelecionada = (Categoria) spinnerCategoria.getSelectedItem();
         int fkCategoria = categoriaSelecionada.getId();
 
-        // Status padrão: Ativo (id = 1)
-        int fkStatus = 1;
-
-        // Verificar estoque e ajustar status
-        if (quantidade <= 0) {
-            fkStatus = 3; // Em Falta
-        }
+        Status statusSelecionado = (Status) spinnerStatus.getSelectedItem();
+        int fkStatus = statusSelecionado.getId();
 
         if (produtoId != -1) {
             // Modo edição
@@ -273,9 +294,6 @@ public class ProdutoActivity extends AppCompatActivity {
         spinnerCategoria.setSelection(0);
     }
 
-    /**
-     * Confirmar exclusão do produto
-     */
     private void confirmarExclusaoProduto() {
         if (produtoEmEdicao == null) {
             return;
@@ -295,9 +313,6 @@ public class ProdutoActivity extends AppCompatActivity {
                 .show();
     }
 
-    /**
-     * Excluir produto do banco de dados
-     */
     private void excluirProduto() {
         try {
             int resultado = produtoDAO.excluir(produtoId);

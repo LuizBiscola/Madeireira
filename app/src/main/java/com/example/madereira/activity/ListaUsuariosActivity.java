@@ -33,19 +33,14 @@ public class ListaUsuariosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_usuarios);
 
-        // Inicializar componentes
         inicializarComponentes();
 
-        // Inicializar DAO
         usuarioDAO = new UsuarioDAO(this);
 
-        // Configurar RecyclerView
         configurarRecyclerView();
 
-        // Configurar listeners
         configurarListeners();
 
-        // Carregar usuários
         carregarUsuarios();
     }
 
@@ -73,7 +68,6 @@ public class ListaUsuariosActivity extends AppCompatActivity {
     }
 
     private void configurarListeners() {
-        // Botão voltar
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +75,6 @@ public class ListaUsuariosActivity extends AppCompatActivity {
             }
         });
 
-        // Botão adicionar usuário
         fabAdicionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,13 +85,10 @@ public class ListaUsuariosActivity extends AppCompatActivity {
     }
 
     private void carregarUsuarios() {
-        // Buscar usuários do banco
         listaUsuarios = usuarioDAO.listarTodos();
 
-        // Atualizar adapter
         adapter.atualizarLista(listaUsuarios);
 
-        // Atualizar contador e mensagem
         atualizarInterface();
     }
 

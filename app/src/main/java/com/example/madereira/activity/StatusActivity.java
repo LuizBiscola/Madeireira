@@ -25,7 +25,7 @@ public class StatusActivity extends AppCompatActivity {
     // DAO
     private StatusDAO statusDAO;
 
-    // Status para edição (se houver)
+    // Status para edição
     private Status statusEmEdicao;
     private int statusId = -1;
 
@@ -34,16 +34,12 @@ public class StatusActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_status);
 
-        // Inicializar DAO
         statusDAO = new StatusDAO(this);
 
-        // Inicializar componentes
         inicializarComponentes();
 
-        // Verificar se é edição
         verificarModoEdicao();
 
-        // Configurar listeners
         configurarListeners();
     }
 
@@ -56,7 +52,6 @@ public class StatusActivity extends AppCompatActivity {
     }
 
     private void verificarModoEdicao() {
-        // Verificar se foi passado um ID de status para edição
         statusId = getIntent().getIntExtra("status_id", -1);
 
         if (statusId != -1) {
@@ -105,13 +100,11 @@ public class StatusActivity extends AppCompatActivity {
     }
 
     private void salvarStatus() {
-        // Validar campos
         if (!validarCampos()) {
             return;
         }
 
         try {
-            // Obter dados dos campos
             String descricao = etDescricaoStatus.getText().toString().trim();
 
             if (statusId != -1) {
@@ -169,9 +162,6 @@ public class StatusActivity extends AppCompatActivity {
         etDescricaoStatus.setText("");
     }
 
-    /**
-     * Confirmar exclusão do status
-     */
     private void confirmarExclusaoStatus() {
         if (statusEmEdicao == null) {
             return;
@@ -191,9 +181,6 @@ public class StatusActivity extends AppCompatActivity {
                 .show();
     }
 
-    /**
-     * Excluir status do banco de dados
-     */
     private void excluirStatus() {
         try {
             int resultado = statusDAO.excluir(statusId);

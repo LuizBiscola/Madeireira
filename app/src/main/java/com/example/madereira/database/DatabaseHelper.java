@@ -44,7 +44,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "endereco TEXT, " +
                 "telefone TEXT, " +
                 "senha TEXT NOT NULL, " +
-                "tipoPerfil TEXT DEFAULT 'Cliente', " +
                 "cpfCnpj TEXT, " +
                 "dataCadastro TEXT, " +
                 "ativo INTEGER DEFAULT 1)";

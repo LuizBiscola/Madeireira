@@ -31,19 +31,14 @@ public class ListaStatusActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_status);
 
-        // Inicializar componentes
         inicializarComponentes();
 
-        // Inicializar DAO
         statusDAO = new StatusDAO(this);
 
-        // Configurar RecyclerView
         configurarRecyclerView();
 
-        // Configurar listeners
         configurarListeners();
 
-        // Carregar status
         carregarStatus();
     }
 
@@ -59,7 +54,6 @@ public class ListaStatusActivity extends AppCompatActivity {
         adapter = new StatusAdapter(listaStatus, new StatusAdapter.OnStatusClickListener() {
             @Override
             public void onStatusClick(Status status) {
-                // Abrir tela de edição do status
                 Intent intent = new Intent(ListaStatusActivity.this, StatusActivity.class);
                 intent.putExtra("status_id", status.getId());
                 startActivity(intent);
@@ -71,7 +65,6 @@ public class ListaStatusActivity extends AppCompatActivity {
     }
 
     private void configurarListeners() {
-        // Botão voltar
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,7 +72,6 @@ public class ListaStatusActivity extends AppCompatActivity {
             }
         });
 
-        // Botão adicionar status
         fabAdicionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,10 +82,8 @@ public class ListaStatusActivity extends AppCompatActivity {
     }
 
     private void carregarStatus() {
-        // Buscar status do banco
         listaStatus = statusDAO.listarTodos();
 
-        // Atualizar adapter
         adapter.atualizarLista(listaStatus);
 
         // Mostrar/esconder mensagem de lista vazia
@@ -109,7 +99,7 @@ public class ListaStatusActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Recarregar status quando voltar para esta tela
+        // Recarregar status quando voltar para a tela
         carregarStatus();
     }
 }

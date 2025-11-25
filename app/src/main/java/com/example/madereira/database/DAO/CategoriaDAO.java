@@ -88,16 +88,4 @@ public class CategoriaDAO {
         db.close();
         return linhasAfetadas;
     }
-
-    // DELETE LÓGICO (desativar)
-    public int desativar(int id) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("ativo", 0);
-
-        int linhasAfetadas = db.update(DatabaseHelper.TABLE_CATEGORIA, values, "id = ?",
-                new String[]{String.valueOf(id)});
-        db.close();
-        return linhasAfetadas;
-    }
 }

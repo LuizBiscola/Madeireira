@@ -79,6 +79,13 @@ public class ProdutoAdapter extends RecyclerView.Adapter<ProdutoAdapter.ProdutoV
                 tvCategoria.setText("Categoria: " + produto.getFkCategoria());
             }
 
+            // Mostrar status
+            if (produto.getNomeStatus() != null) {
+                tvStatus.setText(produto.getNomeStatus());
+            } else {
+                tvStatus.setText("Status: " + produto.getFkStatus());
+            }
+
             // Quantidade
             tvQuantidade.setText(String.format("Qtd: %.0f %s",
                 produto.getQuantidade(),
@@ -86,32 +93,6 @@ public class ProdutoAdapter extends RecyclerView.Adapter<ProdutoAdapter.ProdutoV
 
             // Preço formatado
             tvPreco.setText(produto.getPrecoFormatado());
-
-            // Status com cores
-            if (produto.getNomeStatus() != null) {
-                tvStatus.setText(produto.getNomeStatus());
-
-                // Colorir de acordo com o status
-                switch (produto.getNomeStatus()) {
-                    case "Ativo":
-                        tvStatus.setBackgroundColor(Color.parseColor("#4CAF50")); // Verde
-                        break;
-                    case "Inativo":
-                        tvStatus.setBackgroundColor(Color.parseColor("#9E9E9E")); // Cinza
-                        break;
-                    case "Em Falta":
-                        tvStatus.setBackgroundColor(Color.parseColor("#FF9800")); // Laranja
-                        break;
-                    case "Descontinuado":
-                        tvStatus.setBackgroundColor(Color.parseColor("#F44336")); // Vermelho
-                        break;
-                    default:
-                        tvStatus.setBackgroundColor(Color.parseColor("#2196F3")); // Azul
-                }
-            } else {
-                tvStatus.setText("Status: " + produto.getFkStatus());
-                tvStatus.setBackgroundColor(Color.parseColor("#757575"));
-            }
 
             // Click no item
             itemView.setOnClickListener(new View.OnClickListener() {
