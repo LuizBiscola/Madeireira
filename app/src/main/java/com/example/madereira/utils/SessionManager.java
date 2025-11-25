@@ -10,10 +10,8 @@ public class SessionManager {
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
-    private Context context;
 
     public SessionManager(Context context) {
-        this.context = context;
         prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = prefs.edit();
     }
@@ -41,4 +39,3 @@ public class SessionManager {
         editor.commit();
     }
 }
-

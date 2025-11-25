@@ -18,7 +18,6 @@ public class StatusDAO {
         dbHelper = new DatabaseHelper(context);
     }
 
-    // CREATE
     public long inserir(Status status) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -29,7 +28,6 @@ public class StatusDAO {
         return id;
     }
 
-    // READ - Listar Todos
     public List<Status> listarTodos() {
         List<Status> listaStatus = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -50,7 +48,6 @@ public class StatusDAO {
         return listaStatus;
     }
 
-    // READ - Buscar por ID
     public Status buscarPorId(int id) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(DatabaseHelper.TABLE_STATUS, null, "id = ?",
@@ -68,7 +65,6 @@ public class StatusDAO {
         return status;
     }
 
-    // UPDATE
     public int atualizar(Status status) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -80,7 +76,6 @@ public class StatusDAO {
         return linhasAfetadas;
     }
 
-    // DELETE
     public int excluir(int id) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         int linhasAfetadas = db.delete(DatabaseHelper.TABLE_STATUS, "id = ?",

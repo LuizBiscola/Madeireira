@@ -48,13 +48,11 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
         return listaUsuarios.size();
     }
 
-    // Método para atualizar a lista
     public void atualizarLista(List<Usuario> novaLista) {
         this.listaUsuarios = novaLista;
         notifyDataSetChanged();
     }
 
-    // ViewHolder
     static class UsuarioViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvNome;

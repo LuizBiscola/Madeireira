@@ -39,25 +39,6 @@ public class ProdutoDAO {
         return id;
     }
 
-    public List<Produto> listarTodos() {
-        List<Produto> listaProdutos = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        Cursor cursor = db.query(DatabaseHelper.TABLE_PRODUTO, null, null,
-                null, null, null, "nome ASC");
-
-        if (cursor.moveToFirst()) {
-            do {
-                Produto produto = cursorParaProduto(cursor);
-                listaProdutos.add(produto);
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-        return listaProdutos;
-    }
-
     public List<Produto> listarTodosComJoin() {
         List<Produto> listaProdutos = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -84,7 +65,6 @@ public class ProdutoDAO {
         return listaProdutos;
     }
 
-    // READ - Buscar por ID
     public Produto buscarPorId(int id) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(DatabaseHelper.TABLE_PRODUTO, null, "id = ?",
@@ -100,27 +80,6 @@ public class ProdutoDAO {
         return produto;
     }
 
-    // READ - Buscar por Categoria
-    public List<Produto> buscarPorCategoria(int categoriaId) {
-        List<Produto> listaProdutos = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        Cursor cursor = db.query(DatabaseHelper.TABLE_PRODUTO, null, "fkCategoria = ?",
-                new String[]{String.valueOf(categoriaId)}, null, null, "nome ASC");
-
-        if (cursor.moveToFirst()) {
-            do {
-                Produto produto = cursorParaProduto(cursor);
-                listaProdutos.add(produto);
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-        return listaProdutos;
-    }
-
-    // UPDATE
     public int atualizar(Produto produto) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -138,7 +97,6 @@ public class ProdutoDAO {
         return linhasAfetadas;
     }
 
-    // DELETE
     public int excluir(int id) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         int linhasAfetadas = db.delete(DatabaseHelper.TABLE_PRODUTO, "id = ?",
@@ -147,7 +105,6 @@ public class ProdutoDAO {
         return linhasAfetadas;
     }
 
-    // Método auxiliar para converter Cursor em Produto
     private Produto cursorParaProduto(Cursor cursor) {
         Produto produto = new Produto();
         produto.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));

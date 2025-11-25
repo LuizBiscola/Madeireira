@@ -17,7 +17,6 @@ public class CategoriaDAO {
         dbHelper = new DatabaseHelper(context);
     }
 
-    // CREATE
     public long inserir(Categoria categoria) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
